@@ -1,0 +1,9 @@
+{
+  "watch": ["server.js", "routes/", "controllers/", "models/", "middleware/", "config/"],
+  "ignore": ["../frontend/*", "node_modules/*", ".git"],
+  "ext": "js,json",
+  "delay": "2500",
+  "env": {
+    "NODE_ENV": "development"
+  }
+}
