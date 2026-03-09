@@ -21,7 +21,7 @@ const allowedOrigins = [
     'http://localhost:5500',
     'http://127.0.0.1:5500',
     'http://localhost:3000',
-    'https://kgl-system.netlify.app',  // ← Your Netlify URL (NO trailing slash!)
+    'https://kgl-system.netlify.app',  // ← Your Netlify URL
     'https://kgl-backend-ozz5.onrender.com'
 ];
 
@@ -75,6 +75,26 @@ app.get('/api/test', (req, res) => {
 });
 
 // ========================================
+// DEBUG ROUTE - Check users in database (SINGLE COPY)
+// ========================================
+app.get('/api/debug/users', async (req, res) => {
+  try {
+    const User = require('./models/User');
+    const users = await User.find().select('email role branch');
+    res.json({ 
+      success: true, 
+      users: users,
+      count: users.length
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      success: false, 
+      error: error.message 
+    });
+  }
+});
+
+// ========================================
 // Root route - Show API info
 // ========================================
 app.get('/', (req, res) => {
@@ -90,18 +110,18 @@ app.get('/', (req, res) => {
             creditsales: '/api/creditsales',
             reports: '/api/reports'
         },
-        frontend: 'https://kgl-system.netlify.app'  // ← Updated to match your URL
+        frontend: 'https://kgl-system.netlify.app'
     });
 });
 
 // ========================================
-// 404 handler for undefined routes
+// 404 handler for undefined routes (MUST BE LAST!)
 // ========================================
 app.use('*', (req, res) => {
     res.status(404).json({
         success: false,
         message: `Route ${req.originalUrl} not found`,
-        availableEndpoints: '/api/test, /api/auth/login, /api/users, etc.'
+        availableEndpoints: '/api/test, /api/auth/login, /api/users, /api/debug/users, etc.'
     });
 });
 
@@ -128,18 +148,5 @@ app.listen(PORT, '0.0.0.0', () => {
     console.log(`\n🚀 Server running on port ${PORT}`);
     console.log(`📝 Test API: https://kgl-backend-ozz5.onrender.com/api/test`);
     console.log(`🌐 Root URL: https://kgl-backend-ozz5.onrender.com`);
-});
-// TEMPORARY DEBUG ROUTE - Remove after testing
-app.get('/api/debug/users', async (req, res) => {
-  try {
-    const User = require('./models/User');
-    const users = await User.find().select('email role');
-    res.json({ 
-      success: true, 
-      users: users,
-      count: users.length
-    });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+    console.log(`🔍 Debug URL: https://kgl-backend-ozz5.onrender.com/api/debug/users`);
 });
