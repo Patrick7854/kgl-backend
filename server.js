@@ -129,3 +129,17 @@ app.listen(PORT, '0.0.0.0', () => {
     console.log(`📝 Test API: https://kgl-backend-ozz5.onrender.com/api/test`);
     console.log(`🌐 Root URL: https://kgl-backend-ozz5.onrender.com`);
 });
+// TEMPORARY DEBUG ROUTE - Remove after testing
+app.get('/api/debug/users', async (req, res) => {
+  try {
+    const User = require('./models/User');
+    const users = await User.find().select('email role');
+    res.json({ 
+      success: true, 
+      users: users,
+      count: users.length
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
