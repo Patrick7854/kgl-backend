@@ -1,6 +1,7 @@
 // ========================================
 // KARIBU GROCERIES BACKEND - server.js
 // PURE API VERSION for Render Deployment
+// FIXED CORS - Single configuration
 // ========================================
 
 const express = require('express');
@@ -14,22 +15,25 @@ dotenv.config();
 const app = express();
 
 // ========================================
-// CORS Configuration - Allow your Netlify frontend
+// CORS Configuration - SINGLE, CLEAN VERSION
 // ========================================
 const allowedOrigins = [
     'http://localhost:5500',
     'http://127.0.0.1:5500',
     'http://localhost:3000',
-    'https://kgl-groceries.netlify.app',  // Your Netlify URL
+    'https://kgl-system.netlify.app',  // ← Your Netlify URL (NO trailing slash!)
     'https://kgl-backend-ozz5.onrender.com'
 ];
 
 app.use(cors({
     origin: function (origin, callback) {
-        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+        // Allow requests with no origin (like mobile apps or curl)
+        if (!origin) return callback(null, true);
+        
+        if (allowedOrigins.indexOf(origin) !== -1) {
             callback(null, true);
         } else {
-            console.log('🚫 Blocked origin:', origin);
+            console.log('🚫 CORS blocked origin:', origin);
             callback(new Error('Not allowed by CORS'));
         }
     },
@@ -86,7 +90,7 @@ app.get('/', (req, res) => {
             creditsales: '/api/creditsales',
             reports: '/api/reports'
         },
-        frontend: 'https://kgl-groceries.netlify.app'
+        frontend: 'https://kgl-system.netlify.app'  // ← Updated to match your URL
     });
 });
 
