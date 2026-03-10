@@ -23,6 +23,7 @@ const allowedOrigins = [
     'http://localhost:3000',
     'https://kgl-system.netlify.app',  // ← Your Netlify URL
     'https://kgl-frontend-one.vercel.app',
+    'https://kgl-frontend-git-master-patrick7854s-projects.vercel.app',  // ← ADD THIS LINE
     'https://kgl-backend-ozz5.onrender.com'
 ];
 
